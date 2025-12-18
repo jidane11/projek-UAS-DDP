@@ -9,6 +9,8 @@
 import streamlit as st
 import menu_data
 import utils
+import os
+st.write(os.listdir("assets/images"))
 
 
 

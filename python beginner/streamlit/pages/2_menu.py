@@ -9,6 +9,7 @@
 import streamlit as st
 import menu_data
 import utils
+import os
 
 
 # ============================================================
@@ -187,15 +188,20 @@ def tambah_ke_keranjang(menu_item, jumlah):
 # FUNCTION: Menampilkan kartu menu
 # ============================================================
 def tampilkan_menu_card(menu_item, col_key):
-    
-    """
-    Menampilkan kartu menu individual
-    Menggunakan LOGIKA untuk status ketersediaan
-    """
     with st.container():
-         # Tampilkan gambar
-        gambar = menu_item.get("gambar", "assets/images/default.jpg")
+
+        # ==============================
+        # AMAN UNTUK DEPLOY STREAMLIT
+        # ==============================
+        default_gambar = "assets/images/default.jpg"
+        gambar = menu_item.get("gambar", default_gambar)
+
+        # VALIDASI FILE (INI KUNCI)
+        if not gambar or not os.path.exists(gambar):
+            gambar = default_gambar
+
         st.image(gambar, use_container_width=True)
+
         st.markdown(f"""
         <div class="menu-card">
             <div class="menu-name">{menu_item['nama']}</div>
@@ -204,8 +210,6 @@ def tampilkan_menu_card(menu_item, col_key):
         </div>
         """, unsafe_allow_html=True)
 
-        
-        # LOGIKA: Cek ketersediaan
         if menu_item['tersedia']:
             col_qty, col_btn = st.columns([1, 1])
             with col_qty:
@@ -214,15 +218,21 @@ def tampilkan_menu_card(menu_item, col_key):
                     min_value=1,
                     max_value=10,
                     value=1,
-                    key=f"qty_{col_key}_{menu_item['id']}"
+                    key=f"qty_{menu_item['id']}_{col_key}"
                 )
             with col_btn:
-                if st.button("➕ Tambah", key=f"add_{col_key}_{menu_item['id']}"):
+                if st.button(
+                    "➕ Tambah",
+                    key=f"add_{menu_item['id']}_{col_key}"
+                ):
                     tambah_ke_keranjang(menu_item, qty)
                     st.success(f"✅ {menu_item['nama']} ditambahkan!")
                     st.rerun()
         else:
-            st.markdown('<span class="status-habis">❌ Stok Habis</span>', unsafe_allow_html=True)
+            st.markdown(
+                '<span class="status-habis">❌ Stok Habis</span>',
+                unsafe_allow_html=True
+            )
 
 
 # ============================================================
