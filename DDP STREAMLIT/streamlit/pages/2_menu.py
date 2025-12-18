@@ -10,6 +10,7 @@ import streamlit as st
 import menu_data
 import utils
 
+
 # ============================================================
 # KONFIGURASI HALAMAN
 # ============================================================
@@ -186,6 +187,7 @@ def tambah_ke_keranjang(menu_item, jumlah):
 # FUNCTION: Menampilkan kartu menu
 # ============================================================
 def tampilkan_menu_card(menu_item, col_key):
+    
     """
     Menampilkan kartu menu individual
     Menggunakan LOGIKA untuk status ketersediaan
@@ -201,6 +203,7 @@ def tampilkan_menu_card(menu_item, col_key):
             <div class="menu-price">{utils.format_rupiah(menu_item['harga'])}</div>
         </div>
         """, unsafe_allow_html=True)
+
         
         # LOGIKA: Cek ketersediaan
         if menu_item['tersedia']:
