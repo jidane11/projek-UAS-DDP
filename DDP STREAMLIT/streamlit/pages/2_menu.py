@@ -194,7 +194,7 @@ def tampilkan_menu_card(menu_item, col_key):
     """
     with st.container():
          # Tampilkan gambar
-        gambar = menu_item.get("gambar", "assets/images/default.jpg")
+        gambar = menu_item.get("gambar", "../assets/images/default.jpg")
         st.image(gambar, use_container_width=True)
         st.markdown(f"""
         <div class="menu-card">
