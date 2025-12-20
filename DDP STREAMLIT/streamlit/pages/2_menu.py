@@ -186,16 +186,67 @@ def tambah_ke_keranjang(menu_item, jumlah):
 # ============================================================
 # FUNCTION: Menampilkan kartu menu
 # ============================================================
-def tampilkan_menu_card(menu_item, col_key):
+# def tampilkan_menu_card(menu_item, col_key):
     
+#     """
+#     Menampilkan kartu menu individual
+#     Menggunakan LOGIKA untuk status ketersediaan
+#     """
+#     with st.container():
+#          # Tampilkan gambar
+#         gambar = menu_item.get("gambar", "assets/images/default.jpg")
+#         st.image(gambar, use_container_width=True)
+#         st.markdown(f"""
+#         <div class="menu-card">
+#             <div class="menu-name">{menu_item['nama']}</div>
+#             <div class="menu-desc">{menu_item['deskripsi']}</div>
+#             <div class="menu-price">{utils.format_rupiah(menu_item['harga'])}</div>
+#         </div>
+#         """, unsafe_allow_html=True)
+
+        
+#         # LOGIKA: Cek ketersediaan
+#         if menu_item['tersedia']:
+#             col_qty, col_btn = st.columns([1, 1])
+#             with col_qty:
+#                 qty = st.number_input(
+#                     "Jumlah",
+#                     min_value=1,
+#                     max_value=10,
+#                     value=1,
+#                     key=f"qty_{col_key}_{menu_item['id']}"
+#                 )
+#             with col_btn:
+#                 if st.button("➕ Tambah", key=f"add_{col_key}_{menu_item['id']}"):
+#                     tambah_ke_keranjang(menu_item, qty)
+#                     st.success(f"✅ {menu_item['nama']} ditambahkan!")
+#                     st.rerun()
+#         else:
+#             st.markdown('<span class="status-habis">❌ Stok Habis</span>', unsafe_allow_html=True)
+
+def tampilkan_menu_card(menu_item, col_key):
     """
     Menampilkan kartu menu individual
-    Menggunakan LOGIKA untuk status ketersediaan
+    Support gambar dari URL (link online) atau file lokal
     """
+
     with st.container():
-         # Tampilkan gambar
-        gambar = menu_item.get("gambar", "../assets/images/default.jpg")
+
+        # ===============================
+        # AMBIL GAMBAR (URL / LOKAL)
+        # ===============================
+        gambar = menu_item.get("gambar")
+
+        # Jika gambar kosong / None → pakai default
+        if not gambar:
+            gambar = "https://via.placeholder.com/300x200?text=No+Image"
+
+        # Tampilkan gambar (URL ATAU path lokal sama-sama bisa)
         st.image(gambar, use_container_width=True)
+
+        # ===============================
+        # KONTEN MENU
+        # ===============================
         st.markdown(f"""
         <div class="menu-card">
             <div class="menu-name">{menu_item['nama']}</div>
@@ -204,10 +255,12 @@ def tampilkan_menu_card(menu_item, col_key):
         </div>
         """, unsafe_allow_html=True)
 
-        
-        # LOGIKA: Cek ketersediaan
+        # ===============================
+        # LOGIKA KETERSEDIAAN
+        # ===============================
         if menu_item['tersedia']:
             col_qty, col_btn = st.columns([1, 1])
+
             with col_qty:
                 qty = st.number_input(
                     "Jumlah",
@@ -216,13 +269,18 @@ def tampilkan_menu_card(menu_item, col_key):
                     value=1,
                     key=f"qty_{col_key}_{menu_item['id']}"
                 )
+
             with col_btn:
                 if st.button("➕ Tambah", key=f"add_{col_key}_{menu_item['id']}"):
                     tambah_ke_keranjang(menu_item, qty)
                     st.success(f"✅ {menu_item['nama']} ditambahkan!")
                     st.rerun()
         else:
-            st.markdown('<span class="status-habis">❌ Stok Habis</span>', unsafe_allow_html=True)
+            st.markdown(
+                '<span class="status-habis">❌ Stok Habis</span>',
+                unsafe_allow_html=True
+            )
+
 
 
 # ============================================================
